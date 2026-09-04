@@ -23,14 +23,14 @@ explain why overdue status is computed by a background sweep instead of on-the-f
 
 ---
 
-## 2. Tech Stack
+## Tech Stack
 
 **Backend:** Java 17, Spring Boot 3.x, Spring Security + JWT, Spring Data JPA, Spring Scheduling, MySQL, Maven, Lombok
 **Frontend:** React 18, React Router v6, Axios, Context API, Tailwind CSS
 
 ---
 
-## 3. Domain Model
+## Domain Model
 
 ```mermaid
 erDiagram
@@ -80,7 +80,7 @@ can never drift out of sync no matter what client calls the API.
 
 ---
 
-## 4. The Scheduled Job
+## The Scheduled Job
 
 `OverdueCheckScheduler` runs on a cron defined in `application.properties`
 (`trustlend.overdue-check-cron`, default: daily at 1 AM). Each run:
@@ -94,7 +94,7 @@ an item flip to OVERDUE in real time without waiting a day.
 
 ---
 
-## 5. Folder Structure
+##  Folder Structure
 
 **Backend**
 ```
@@ -123,7 +123,7 @@ src/
 
 ---
 
-## 6. API Summary
+##  API Summary
 
 | Method | Endpoint | Purpose |
 |---|---|---|
@@ -144,7 +144,7 @@ All endpoints except `/api/auth/**` and `GET /api/items/**` require `Authorizati
 
 ---
 
-## 7. Setup Instructions
+## Setup Instructions
 
 ### Backend
 ```bash
@@ -166,19 +166,3 @@ npm run dev
 ```
 
 ---
-
-## 8. Likely Interview Questions
-
-- Why is `available` a separate boolean on `Item` instead of derived from loan status each time?
-  (Fast reads for the browse page — no join/subquery needed to know if something's borrowable.)
-- What happens if two people request the same item at once, and the owner approves both?
-  (Second `approve()` call fails the `item.isAvailable()` check and throws a conflict — the first
-  write wins.)
-- Why cron-based sweep instead of checking "is this overdue" at request time?
-  (Overdue is a durable fact that should drive side effects — reminders, sorting, reports — not a
-  value recomputed differently by every caller.)
-- How would you add reminder emails before the due date, not just after?
-  (Add a second scheduled query for loans due in N days, integrate an email service, e.g. Spring's
-  `JavaMailSender` or a transactional email API.)
-- What would you change for scale? (Move the sweep to a distributed job scheduler if running
-  multiple app instances, to avoid double-processing the same loans.)
