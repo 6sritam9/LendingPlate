@@ -6,31 +6,15 @@ background job automatically flags loans that go past their due date.
 
 ---
 
-## 1. Why This Project (Interview Positioning)
 
-| What interviewers test for | Where TrustLend demonstrates it |
-|---|---|
-| Non-CRUD business logic | Borrowing state machine (PENDING → BORROWED → RETURNED/OVERDUE) |
-| Background/scheduled processing | `@Scheduled` job that sweeps and flags overdue loans |
-| Data consistency across entities | Item `available` flag kept in sync with loan status changes |
-| Auth & security | Spring Security + JWT |
-| REST API design | Resource-based endpoints, proper status codes, DTOs |
-| Frontend state management | React Router, protected routes, Axios interceptors, Context API |
-
-The scheduled job is the feature most likely to spark a good interview conversation — be ready to
-explain why overdue status is computed by a background sweep instead of on-the-fly at read time
-(durability, ability to trigger side effects like notifications, cheaper reads).
-
----
-
-## 2. Tech Stack
+##  Tech Stack
 
 **Backend:** Java 17, Spring Boot 3.x, Spring Security + JWT, Spring Data JPA, Spring Scheduling, MySQL, Maven, Lombok
 **Frontend:** React 18, React Router v6, Axios, Context API, Tailwind CSS
 
 ---
 
-## 3. Domain Model
+##  Domain Model
 
 ```mermaid
 erDiagram
@@ -80,7 +64,7 @@ can never drift out of sync no matter what client calls the API.
 
 ---
 
-## 4. The Scheduled Job
+##  The Scheduled Job
 
 `OverdueCheckScheduler` runs on a cron defined in `application.properties`
 (`trustlend.overdue-check-cron`, default: daily at 1 AM). Each run:
@@ -94,7 +78,7 @@ an item flip to OVERDUE in real time without waiting a day.
 
 ---
 
-## 5. Folder Structure
+##  Folder Structure
 
 **Backend**
 ```
@@ -123,7 +107,7 @@ src/
 
 ---
 
-## 6. API Summary
+##  API Summary
 
 | Method | Endpoint | Purpose |
 |---|---|---|
@@ -144,7 +128,7 @@ All endpoints except `/api/auth/**` and `GET /api/items/**` require `Authorizati
 
 ---
 
-## 7. Setup Instructions
+##  Setup Instructions
 
 ### Backend
 ```bash
