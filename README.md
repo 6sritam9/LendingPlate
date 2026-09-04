@@ -166,19 +166,3 @@ npm run dev
 ```
 
 ---
-
-## 8. Likely Interview Questions
-
-- Why is `available` a separate boolean on `Item` instead of derived from loan status each time?
-  (Fast reads for the browse page — no join/subquery needed to know if something's borrowable.)
-- What happens if two people request the same item at once, and the owner approves both?
-  (Second `approve()` call fails the `item.isAvailable()` check and throws a conflict — the first
-  write wins.)
-- Why cron-based sweep instead of checking "is this overdue" at request time?
-  (Overdue is a durable fact that should drive side effects — reminders, sorting, reports — not a
-  value recomputed differently by every caller.)
-- How would you add reminder emails before the due date, not just after?
-  (Add a second scheduled query for loans due in N days, integrate an email service, e.g. Spring's
-  `JavaMailSender` or a transactional email API.)
-- What would you change for scale? (Move the sweep to a distributed job scheduler if running
-  multiple app instances, to avoid double-processing the same loans.)
